@@ -5,12 +5,13 @@
   </head>
 <!--<style> circle {fill: lightblue; stroke: black;} </style>-->
   <body onload='init()'>
-    <p>
+    <div style="width: 500px;">
       <svg width=500 height=500>
       </svg>
+	  <br>
       <button id="back" onclick="goBack()">Back</button>
-      <button id="forward" text-align="right" onclick="goForward()">Forward</button>
-    </p>
+      <button id="forward" style="float: right;" onclick="goForward()">Forward</button>
+    </div>
     <script>
       var state = 0;
     
