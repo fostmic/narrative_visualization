@@ -3,11 +3,26 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <!--<style> circle {fill: lightblue; stroke: black;} </style>-->
 <body onload='init()'>
-<svg width=500 height=500>
-</svg>
-<script>
-async function init() {
-}
+  <svg width=500 height=500>
+  </svg>
+  <button id="back" onclick = "goBack()">Back</button>
+  <button id="forward" onclick = "goBack()">Forward</button>
+  <script>
+    var state = 0;
+    
+    async function init() {
+    }
+  
+    function goBack() {
+      if (state != 0) state += 1;
+      alert("back");
+    }
+ 
+    function goForward() {
+      if (state != 4) state -= 1;
+      alert("forward");
+    }
+  
 </script>
 </body>
 </html>
