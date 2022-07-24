@@ -1,4 +1,4 @@
-date,elevation_ft
+date,elevation(feet)
 1968-12-01,5985.19
 1969-01-01,5980.22
 1969-02-01,5975.45
