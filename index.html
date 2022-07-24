@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src='https://d3js.org/d3.v6.min.js'></script>
+    <!--<script src='https://d3js.org/d3.v6.min.js'></script>-->
+	<script src='https://d3js.org/d3.v4.js'></script>
   </head>
 <!--<style> circle {fill: lightblue; stroke: black;} </style>-->
   <body onload='init()'>
-    <div style="width: 500px;">
-      <svg id="viz" width=500 height=500>
-      </svg>
-	  <br>
+    <div id="viz" style="width: 500px;"></div>
+	<br>
+	<div id ="buttons" style="width: 500px;">
       <button id="back" onclick="goBack()">Back</button>
       <button id="forward" style="float: right;" onclick="goForward()">Forward</button>
     </div>
@@ -18,17 +18,24 @@
 	var margin = {top: 10, right: 10, bottom: 25, left: 50},
 	width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
+	
+	var svg = d3.select("#viz")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform",
+                      "translate(" + margin.left + "," + margin.top + ")");
       
-	var state = 0;
+	var state = 0; // state of the viz
     
     async function init() {
 	    
 	//const meadData = await d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_1935_2022.csv');
-	//d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
       
-	var svg = d3.select("#viz")
     //Read the data
-    d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_1935_2022.csv',
+    d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_Formatted.csv',
+	//d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
 
     // When reading the csv, I must format variables:
     function(d){
@@ -41,31 +48,31 @@
 	console.log(data);
 
       // Add X axis --> it is a date format
-//      var x = d3.scaleTime()
-//      .domain(d3.extent(data, function(d) { return d.date; }))
-//      .range([ 0, width ]);
-//	  
-//      svg.append("g")
-//      .attr("transform", "translate(0," + height + ")")
-//      .call(d3.axisBottom(x));
-//
-//      // Add Y axis
-//      var y = d3.scaleLinear()
-//      .domain([0, d3.max(data, function(d) { return +d.value; })])
-//      .range([ height, 0 ]);
-//	  
-//      svg.append("g")
-//      .call(d3.axisLeft(y));
-//
-//    // Add the line
-//      svg.append("path")
-//      .datum(data)
-//      .attr("fill", "none")
-//      .attr("stroke", "steelblue")
-//      .attr("stroke-width", 1.5)
-//      .attr("d", d3.line()
-//        .x(function(d) { return x(d.date) })
-//        .y(function(d) { return y(d.value) })
+      var x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, width ]);
+	  
+      svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+      // Add Y axis
+      var y = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return +d.value; })])
+      .range([ height, 0 ]);
+	  
+      svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Add the line
+      svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) }))
 
   }
 )}
