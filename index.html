@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!--<script src='https://d3js.org/d3.v6.min.js'></script>-->
 	<script src='https://d3js.org/d3.v4.js'></script>
+	<script src='https://github.com/susielu/d3-annotation/blob/master/d3-annotation.js'></script>
   </head>
 <!--<style> circle {fill: lightblue; stroke: black;} </style>-->
   <body onload='init()'>
+    <div id="header" style="width: 500px; text-align: center;"><b>Lake Mead Water Elevation(feet)</b></div>
     <div id="viz" style="width: 500px;"></div>
 	<br>
 	<div id ="buttons" style="width: 500px;">
-      <button id="back" onclick="goBack()">Back</button>
+      <button id="back" onclick="goBack()" disabled>Back</button>
       <button id="forward" style="float: right;" onclick="goForward()">Forward</button>
     </div>
     <script>
@@ -28,69 +29,140 @@
                       "translate(" + margin.left + "," + margin.top + ")");
       
 	var state = 0; // state of the viz
+	
+	var x,y;
     
     async function init() {
-	    
-	//const meadData = await d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_1935_2022.csv');
-      
+	        
     //Read the data
     d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_Formatted.csv',
-	//d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
 
-    // When reading the csv, I must format variables:
+
     function(d){
-      return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+      return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.elevation_ft }
     },
 
-    // Now I can use this dataset:
-    function(data) {
-	
-	console.log(data);
 
-      // Add X axis --> it is a date format
-      var x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.date; }))
+    function(data) {
+		
+	//console.log(data);
+
+      // X axis
+      x = d3.scaleTime()
+	  .domain([new Date(1935,1,15), new Date(1937,5,31)])
       .range([ 0, width ]);
 	  
       svg.append("g")
+	  .attr("id", "x_axis")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
       // Add Y axis
-      var y = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return +d.value; })])
+      y = d3.scaleLinear()
+      .domain([700, 1250])
       .range([ height, 0 ]);
 	  
       svg.append("g")
+	  .attr("id", "y_axis")
       .call(d3.axisLeft(y));
 
-    // Add the line
+     // Add line
       svg.append("path")
+	  .attr("id", "path")
       .datum(data)
+	  .attr("stroke", "blue")
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
       .attr("d", d3.line()
         .x(function(d) { return x(d.date) })
         .y(function(d) { return y(d.value) }))
 
-  }
-)}
+    }
+    )
+    }
 	  
 	  
+	  function loadState(state) {
+	    switch(state) {
+		case 0:
+		  document.getElementById("back").disabled = true;
+
+		  	x = d3.scaleTime()
+	       .domain([new Date(1935,1,15), new Date(1937,5,31)])
+           .range([ 0, width ]);
 	  
-	  
-	  
-  
-      function goBack() {
-        if (state != 0) state -= 1;
-        alert("back, state = " + state);
+		   svg.select("#x_axis")
+		   .transition().duration(1500)
+           .call(d3.axisBottom(x));
+		   
+		   svg.select("#path")
+		   .transition().duration(1500)
+		   .attr("d", d3.line()
+           .x(function(d) { return x(d.date) })
+           .y(function(d) { return y(d.value) }));
+		  
 		
+		  break;
+		
+		case 1:
+		   document.getElementById("back").disabled = false;
+		   
+		   x = d3.scaleTime()
+	       .domain([new Date(1935,1,15), new Date(1998,11,15)])
+           .range([ 0, width ]);
+	  
+		   svg.select("#x_axis")
+		   .transition().duration(1500)
+           .call(d3.axisBottom(x));
+		   
+		   svg.select("#path")
+		   .transition().duration(1500)
+		   .attr("d", d3.line()
+           .x(function(d) { return x(d.date) })
+           .y(function(d) { return y(d.value) }));
+		  
+		  break;
+		  
+		case 2:
+		  document.getElementById("forward").disabled = false;
+		  
+		  		   x = d3.scaleTime()
+	       .domain([new Date(1935,1,15), new Date(2022,7,1)])
+           .range([ 0, width ]);
+	  
+		   svg.select("#x_axis")
+		   .transition().duration(1500)
+           .call(d3.axisBottom(x));
+		   
+		   svg.select("#path")
+		   .transition().duration(1500)
+		   .attr("d", d3.line()
+             .x(function(d) { return x(d.date) })
+             .y(function(d) { return y(d.value) }));
+		  
+		  break;
+		
+		case 3:
+		  document.getElementById("forward").disabled = true;
+		  break;
+		
+		}
+	  }
+	  
+	  
+      function goBack() {
+        if (state != 0) 
+		{
+		  state -= 1;
+		  loadState(state);
+		}
       }
  
       function goForward() {
-        if (state != 4) state += 1;
-        alert("forward, state = " + state);
+        if (state != 3) 
+		{
+		  state += 1;
+		  loadState(state);
+		}
       }
   
 </script>
