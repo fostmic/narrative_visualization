@@ -35,17 +35,31 @@
 	var state = 0; // state of the viz
 	
 	
+//	var svgtooltipGorge = d3.select("body")
+//    .append("div")
+//	.text("a simple tooltip")
+//    .style("position", "absolute")
+//    .style("z-index", "7")
+//    .style("visibility", "hidden")
+//    .append("svg")
+//    .attr("width", widthtt + margintt.left + margintt.right)
+//    .attr("height", heighttt + margintt.top + margintt.bottom)
+//    .append("g")
+//    .attr("transform",
+//        "translate(" + margintt.left + "," + margintt.top + ")");	
+	
+	
+	
 	var svgtooltipGorge = d3.select("body")
     .append("div")
     .style("position", "absolute")
-    .style("z-index", "7")
+    .style("z-index", "10")
     .style("visibility", "hidden")
-    .append("svg")
-    .attr("width", widthtt + margintt.left + margintt.right)
-    .attr("height", heighttt + margintt.top + margintt.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + margintt.left + "," + margintt.top + ")");	
+    .text("a simple tooltip");
+	
+	
+	
+	
 	
 	var x,y;
     
@@ -326,7 +340,7 @@
             .style('fill', 'lightblue');
 	      svg
 			.append('text')
-			.attr('x', lineEnd2[0] + markerWidth + radius - 27)
+			.attr('x', lineEnd2[0] + markerWidth + radius - 25)
 			.attr('y', circleY + 40)
 			.text('Lake Mead')
 			.style("font-size", "10px");
@@ -349,7 +363,7 @@
             .style('fill', 'lightblue');
 	      svg
 			.append('text')
-			.attr('x', lineEnd3[0] + markerWidth + radius - 22)
+			.attr('x', lineEnd3[0] + markerWidth + radius - 26)
 			.attr('y', circleY + 40)
 			.text('Lake Mojave')
 			.style("font-size", "10px");			
@@ -371,7 +385,7 @@
             .style('fill', 'lightblue');
 	      svg
 			.append('text')
-			.attr('x', lineEnd4[0] + markerWidth + radius - 20)
+			.attr('x', lineEnd4[0] + markerWidth + radius - 30)
 			.attr('y', circleY + 40)
 			.text('Lake Havasau')
 			.style("font-size", "10px");	
