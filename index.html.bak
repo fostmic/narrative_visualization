@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<script src='https://d3js.org/d3.v4.js'></script>
+	<script src='https://d3js.org/d3.v5.js'></script>
 	<script src='https://github.com/susielu/d3-annotation/blob/master/d3-annotation.js'></script>
   </head>
 <!--<style> circle {fill: lightblue; stroke: black;} </style>-->
@@ -37,17 +37,17 @@
     //Read the data
     d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_Formatted.csv',
 
-    // When reading the csv, I must format variables:
+
     function(d){
       return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.elevation_ft }
     },
 
-    // Now I can use this dataset:
+
     function(data) {
 		
 	//console.log(data);
 
-      // Add X axis
+      // X axis
       x = d3.scaleTime()
 	  .domain([new Date(1935,1,15), new Date(1937,5,31)])
       .range([ 0, width ]);
