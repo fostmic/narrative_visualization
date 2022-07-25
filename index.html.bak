@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<script src='https://d3js.org/d3.v5.js'></script>
+	<script src='https://d3js.org/d3.v4.js'></script>
 	<script src='https://github.com/susielu/d3-annotation/blob/master/d3-annotation.js'></script>
   </head>
 <!--<style> circle {fill: lightblue; stroke: black;} </style>-->
@@ -20,6 +20,10 @@
 	width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 	
+    var margintt = {top: 0, right: 0, bottom: 10, left: 20},
+	widthtt = 100 - margintt.left - margintt.right,
+    heighttt = 100 - margintt.top - margintt.bottom;
+	
 	var svg = d3.select("#viz")
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -29,6 +33,19 @@
                       "translate(" + margin.left + "," + margin.top + ")");
       
 	var state = 0; // state of the viz
+	
+	
+	var svgtooltipGorge = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "7")
+    .style("visibility", "hidden")
+    .append("svg")
+    .attr("width", widthtt + margintt.left + margintt.right)
+    .attr("height", heighttt + margintt.top + margintt.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margintt.left + "," + margintt.top + ")");	
 	
 	var x,y;
     
@@ -57,7 +74,7 @@
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
-      // Add Y axis
+      // Y axis
       y = d3.scaleLinear()
       .domain([700, 1250])
       .range([ height, 0 ]);
@@ -66,7 +83,7 @@
 	  .attr("id", "y_axis")
       .call(d3.axisLeft(y));
 
-     // Add line
+     // line
       svg.append("path")
 	  .attr("id", "path")
       .datum(data)
@@ -125,26 +142,241 @@
 		case 2:
 		  document.getElementById("forward").disabled = false;
 		  
-		  		   x = d3.scaleTime()
-	       .domain([new Date(1935,1,15), new Date(2022,7,1)])
-           .range([ 0, width ]);
-	  
-		   svg.select("#x_axis")
-		   .transition().duration(1500)
-           .call(d3.axisBottom(x));
-		   
-		   svg.select("#path")
-		   .transition().duration(1500)
-		   .attr("d", d3.line()
-             .x(function(d) { return x(d.date) })
-             .y(function(d) { return y(d.value) }));
+		      if (svg.select("#x_axis").size() == 0) {
+		        document.getElementById("header").innerHTML = "<b>Lake Mead Water Elevation(feet)</b>";
+		        svg.selectAll('*').remove();
+		        svg.append("g")
+                  .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+			    
+                d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_Formatted.csv',
+			    
+			    
+                 function(d){
+                   return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.elevation_ft }
+                 },
+	             
+	             
+                 function(data) {
+	             	
+	             //console.log(data);
+	             
+                   // X axis
+                   x = d3.scaleTime()
+	               .domain([new Date(1935,1,15), new Date(2022,8,1)])
+                   .range([ 0, width ]);
+	               
+                   svg.append("g")
+	               .attr("id", "x_axis")
+                   .attr("transform", "translate(0," + height + ")")
+                   .call(d3.axisBottom(x));
+	             
+                   // Y axis
+                   y = d3.scaleLinear()
+                   .domain([700, 1250])
+                   .range([ height, 0 ]);
+	               
+                   svg.append("g")
+	               .attr("id", "y_axis")
+                   .call(d3.axisLeft(y));
+	             
+                  // line
+                   svg.append("path")
+	               .attr("id", "path")
+                   .datum(data)
+	               .attr("stroke", "blue")
+                   .attr("fill", "none")
+                   .attr("d", d3.line()
+                     .x(function(d) { return x(d.date) })
+                     .y(function(d) { return y(d.value) }))
+	             
+                 }
+                 )
+			   }
+			   else
+			   {
+		          x = d3.scaleTime()
+	              .domain([new Date(1935,1,15), new Date(2022,8,1)])
+                  .range([ 0, width ]);
+		          
+		          svg.select("#x_axis")
+		          .transition().duration(1500)
+                  .call(d3.axisBottom(x));
+		          
+		          svg.select("#path")
+		          .transition().duration(1500)
+		          .attr("d", d3.line()
+                  .x(function(d) { return x(d.date) })
+                  .y(function(d) { return y(d.value) }));			     
+			   }
 		  
 		  break;
 		
 		case 3:
 		  document.getElementById("forward").disabled = true;
+		  document.getElementById("header").innerHTML = "<b>Selected Colorado Basin Bodies of Water</b>";
+		  
+		  svg.selectAll('*').remove();
+		  
+		  
+		  const circleX = 20;
+          const circleY = 250;
+          const radius = 20;
+          
+          
+          // Define the arrowhead marker variables
+          const markerBoxWidth = 20;
+          const markerBoxHeight = 20;
+          const refX = markerBoxWidth / 2;
+          const refY = markerBoxHeight / 2;
+          const markerWidth = markerBoxWidth / 2;
+          const markerHeight = markerBoxHeight / 2;
+          const arrowPoints = [[0, 0], [0, 20], [20, 10]];
+
+          // Define the line variables
+          const lineLength = 40;
+          const lineStart = [circleX + radius, circleY];
+          const lineEnd = [lineStart[0] + lineLength, circleY];
+		  const lineStart2 = [lineEnd[0] + (radius * 2) + markerWidth, circleY];
+          const lineEnd2 = [lineStart2[0] + lineLength, circleY];
+		  const lineStart3 = [lineEnd2[0] + (radius * 2) + markerWidth, circleY];
+          const lineEnd3 = [lineStart3[0] + lineLength, circleY];
+		  const lineStart4 = [lineEnd3[0] + (radius * 2) + markerWidth, circleY];
+          const lineEnd4 = [lineStart4[0] + lineLength, circleY];
+
+
+          
+          // Add the arrowhead marker definition to the svg element
+          svg
+            .append('defs')
+            .append('marker')
+            .attr('id', 'arrow')
+            .attr('viewBox', [0, 0, markerBoxWidth, markerBoxHeight])
+            .attr('refX', refX)
+            .attr('refY', refY)
+            .attr('markerWidth', markerBoxWidth)
+            .attr('markerHeight', markerBoxHeight)
+            .attr('orient', 'auto-start-reverse')
+            .append('path')
+            .attr('d', d3.line()(arrowPoints))
+            .attr('stroke', 'black');
+			
+	       svg
+			.append('text')
+			.attr('x', 150)
+			.attr('y', 200)
+			.text('MouseOver the Circles');
+          
+          // Add the first circle
+          svg
+            .append('circle')
+            .attr('cx', circleX)
+            .attr('cy', circleY)
+            .attr('r', radius)
+            .style('fill', 'lightblue')
+			.on("mouseover", function(){return svgtooltipGorge.style("visibility", "visible");})
+            .on("mousemove", function(){return svgtooltipGorge.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+            .on("mouseout", function(){return svgtooltipGorge.style("visibility", "hidden");});
+
+	      svg
+			.append('text')
+			.attr('x', circleX - 30)
+			.attr('y', circleY + 40)
+			.text('Flaming Gorge')
+			.style("font-size", "10px");
+			
+          
+          // Add the line with arrowhead at the end
+          svg
+            .append('path')
+            .attr('d', d3.line()([lineStart, lineEnd]))
+            .attr('stroke', 'black')
+            .attr('marker-end', 'url(#arrow)')
+            .attr('fill', 'none');
+          
+          // Add the second circle
+          svg
+            .append('circle')
+            .attr('cx', lineEnd[0] + markerWidth + radius)
+            .attr('cy', circleY)
+            .attr('r', radius)
+            .style('fill', 'lightblue');
+	      svg
+			.append('text')
+			.attr('x', lineEnd[0] + markerWidth + radius - 25)
+			.attr('y', circleY + 40)
+			.text('Lake Powell')
+			.style("font-size", "10px");
+			
+			
+		  // Add the line with arrowhead at the end
+          svg
+            .append('path')
+            .attr('d', d3.line()([lineStart2, lineEnd2]))
+            .attr('stroke', 'black')
+            .attr('marker-end', 'url(#arrow)')
+            .attr('fill', 'none');
+          
+          // Add the third circle
+          svg
+            .append('circle')
+            .attr('cx', lineEnd2[0] + markerWidth + radius)
+            .attr('cy', circleY)
+            .attr('r', radius)
+            .style('fill', 'lightblue');
+	      svg
+			.append('text')
+			.attr('x', lineEnd2[0] + markerWidth + radius - 27)
+			.attr('y', circleY + 40)
+			.text('Lake Mead')
+			.style("font-size", "10px");
+			
+          	  
+          // Add the line with arrowhead at the end
+          svg
+            .append('path')
+            .attr('d', d3.line()([lineStart3, lineEnd3]))
+            .attr('stroke', 'black')
+            .attr('marker-end', 'url(#arrow)')
+            .attr('fill', 'none');
+          
+          // Add the fourth circle
+          svg
+            .append('circle')
+            .attr('cx', lineEnd3[0] + markerWidth + radius)
+            .attr('cy', circleY)
+            .attr('r', radius)
+            .style('fill', 'lightblue');
+	      svg
+			.append('text')
+			.attr('x', lineEnd3[0] + markerWidth + radius - 22)
+			.attr('y', circleY + 40)
+			.text('Lake Mojave')
+			.style("font-size", "10px");			
+		  
+		 // Add the line with arrowhead at the end
+          svg
+            .append('path')
+            .attr('d', d3.line()([lineStart4, lineEnd4]))
+            .attr('stroke', 'black')
+            .attr('marker-end', 'url(#arrow)')
+            .attr('fill', 'none');
+          
+          // Add the fifth circle
+          svg
+            .append('circle')
+            .attr('cx', lineEnd4[0] + markerWidth + radius)
+            .attr('cy', circleY)
+            .attr('r', radius)
+            .style('fill', 'lightblue');
+	      svg
+			.append('text')
+			.attr('x', lineEnd4[0] + markerWidth + radius - 20)
+			.attr('y', circleY + 40)
+			.text('Lake Havasau')
+			.style("font-size", "10px");	
+		  
 		  break;
-		
 		}
 	  }
 	  
