@@ -20,9 +20,9 @@
 	width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 	
-    var margintt = {top: 0, right: 0, bottom: 10, left: 20},
-	widthtt = 100 - margintt.left - margintt.right,
-    heighttt = 100 - margintt.top - margintt.bottom;
+    var margintt = {top: 0, right: 0, bottom: 25, left: 50},
+	widthtt = 400 - margintt.left - margintt.right,
+    heighttt = 400 - margintt.top - margintt.bottom;
 	
 	var svg = d3.select("#viz")
                 .append("svg")
@@ -35,27 +35,31 @@
 	var state = 0; // state of the viz
 	
 	
-//	var svgtooltipGorge = d3.select("body")
-//    .append("div")
-//	.text("a simple tooltip")
-//    .style("position", "absolute")
-//    .style("z-index", "7")
-//    .style("visibility", "hidden")
-//    .append("svg")
-//    .attr("width", widthtt + margintt.left + margintt.right)
-//    .attr("height", heighttt + margintt.top + margintt.bottom)
-//    .append("g")
-//    .attr("transform",
-//        "translate(" + margintt.left + "," + margintt.top + ")");	
-	
-	
-	
 	var svgtooltipGorge = d3.select("body")
     .append("div")
-    .style("position", "absolute")
-    .style("z-index", "10")
+	//.text("a simple tooltip")
+    //.style("position", "absolute")
+    .style("z-index", "7")
     .style("visibility", "hidden")
-    .text("a simple tooltip");
+	.style("float", "left")
+    //.style("background", "white")
+    .append("svg")
+    .attr("width", widthtt + margintt.left + margintt.right)
+    .attr("height", heighttt + margintt.top + margintt.bottom)
+	.attr("x", "0px")
+    .append("g")
+    .attr("transform",
+        "translate(" + margintt.left + "," + margintt.top + ")");	
+	
+	
+	
+	//var svgtooltipGorge = d3.select("body")
+    //.append("div")
+    //.style("position", "absolute")
+    //.style("z-index", "10")
+    //.style("visibility", "hidden")
+	//.style("background", "white")
+    //.text("a simple tooltip");
 	
 	
 	
@@ -64,8 +68,62 @@
 	var x,y;
     
     async function init() {
+	
+	
+	//Read the Gorge data
+    d3.csv('https://fostmic.github.io/narrative_visualization/Flaming_Gorge_Reservoir_1968_2022.csv',
+
+
+    function(d){
+      return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.elevation_ft }
+    },
+
+
+    function(data) {
+		
+	//console.log(data);
+
+      // X axis
+      x = d3.scaleTime()
+	  .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, widthtt ]);
+	  
+      svgtooltipGorge.append("g")
+	  .attr("id", "x_axis")
+      .attr("transform", "translate(0," + heighttt + ")")
+      .call(d3.axisBottom(x));
+
+      // Y axis
+      y = d3.scaleLinear()
+      .domain(d3.extent(data, function(d) { return d.value; }))
+      .range([ heighttt, 0 ]);
+	  
+      svgtooltipGorge.append("g")
+	  .attr("id", "y_axis")
+      .call(d3.axisLeft(y));
+
+     // line
+      svgtooltipGorge.append("path")
+	  .attr("id", "path")
+      .datum(data)
+	  .attr("stroke", "blue")
+      .attr("fill", "none")
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) }))
+
+    }
+    )
+	
+	
+	
+	
+	
+	
+
+	
 	        
-    //Read the data
+    //Read the Mead data
     d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mead_Formatted.csv',
 
 
@@ -277,9 +335,10 @@
 			
 	       svg
 			.append('text')
-			.attr('x', 150)
+			.attr('x', 30)
 			.attr('y', 200)
-			.text('MouseOver the Circles');
+			.text('MouseOver the Circles to Show a Graph of Historical Water Elevation Below')
+			.style("font-size", "12px");
           
           // Add the first circle
           svg
@@ -289,7 +348,7 @@
             .attr('r', radius)
             .style('fill', 'lightblue')
 			.on("mouseover", function(){return svgtooltipGorge.style("visibility", "visible");})
-            .on("mousemove", function(){return svgtooltipGorge.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+            //.on("mousemove", function(){return svgtooltipGorge.style("top", (event.pageY-10)+"px").style("left",+"0px");})
             .on("mouseout", function(){return svgtooltipGorge.style("visibility", "hidden");});
 
 	      svg
