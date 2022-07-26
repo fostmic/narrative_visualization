@@ -2,7 +2,7 @@
 <html>
   <head>
 	<script src='https://d3js.org/d3.v4.js'></script>
-	<script src='https://github.com/susielu/d3-annotation/blob/master/d3-annotation.js'></script>
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
   </head>
 <!--<style> circle {fill: lightblue; stroke: black;} </style>-->
   <body onload='init()'>
@@ -257,6 +257,28 @@
         .x(function(d) { return x(d.date) })
         .y(function(d) { return y(d.value) }))
 		
+	 const annotations = [
+     {
+      note: {
+	  label: "After Completion of Hoover Dam, Lake Mead Water Level Rises to Full",
+      title: "Filling the Lake"
+
+          },
+          x: 250,
+          y: 250,
+          dy: 75,
+          dx: 75
+        }
+      ]
+
+     // Add annotation to the chart
+     const makeAnnotations = d3.annotation()
+       .annotations(annotations)
+       svg
+       .append("g")
+	   .attr("id", "annotation")
+       .call(makeAnnotations)
+		
 		
 	  // tool tip X axis
       x_t3 = d3.scaleTime()
@@ -417,6 +439,29 @@
 		   .attr("d", d3.line()
            .x(function(d) { return x(d.date) })
            .y(function(d) { return y(d.value) }));
+		   
+		   svg.select("#annotation").remove();
+	       const annotations = [
+           {
+            note: {
+	        label: "After Completion of Hoover Dam, Lake Mead Water Level Rises to Full",
+            title: "Filling the Lake"
+	       
+                },
+                x: 250,
+                y: 250,
+                dy: 75,
+                dx: 75
+              }
+            ]
+	       
+           // Add annotation to the chart
+           const makeAnnotations = d3.annotation()
+             .annotations(annotations)
+             svg
+             .append("g")
+	         .attr("id", "annotation")
+             .call(makeAnnotations)
 		  
 		
 		  break;
@@ -437,6 +482,29 @@
 		   .attr("d", d3.line()
            .x(function(d) { return x(d.date) })
            .y(function(d) { return y(d.value) }));
+		   
+		   svg.select("#annotation").remove();
+		   const annotations2 = [
+           {
+            note: {
+	        label: "With the exception of two periods of drought in the 1950s and 1960s, lake level remains healthy",
+            title: "Steady State"
+	       
+                },
+                x: 200,
+                y: 150,
+                dy: 75,
+                dx: 75
+              }
+            ]
+	       
+           // Add annotation to the chart
+           const makeAnnotations2 = d3.annotation()
+             .annotations(annotations2)
+             svg
+             .append("g")
+	         .attr("id", "annotation")
+             .call(makeAnnotations2)
 		  
 		  break;
 		  
@@ -510,6 +578,29 @@
                   .x(function(d) { return x(d.date) })
                   .y(function(d) { return y(d.value) }));			     
 			   }
+			   
+			   svg.select("#annotation").remove();
+		       const annotations3 = [
+               {
+                note: {
+	            label: "In recent years however, the lake level has dropped precipitously",
+                title: "Decline"
+	           
+                    },
+                    x: 420,
+                    y: 175,
+                    dy: 75,
+                    dx: -75
+                  }
+                ]
+	           
+               // Add annotation to the chart
+               const makeAnnotations3 = d3.annotation()
+                 .annotations(annotations3)
+                 svg
+                 .append("g")
+	             .attr("id", "annotation")
+                 .call(makeAnnotations3)
 		  
 		  break;
 		
