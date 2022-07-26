@@ -11,7 +11,7 @@
 	<br>
 	<div id ="buttons" style="width: 500px;">
       <button id="back" onclick="goBack()" disabled>Back</button>
-      <button id="forward" style="float: right;" onclick="goForward()">Forward</button>
+      <button id="forward" style="float: right;" onclick="goForward()" disabled>Loading...</button>
     </div>
     <script>
 	
@@ -22,7 +22,7 @@
 	
     var margintt = {top: 0, right: 0, bottom: 25, left: 50},
 	widthtt = 400 - margintt.left - margintt.right,
-    heighttt = 400 - margintt.top - margintt.bottom;
+    heighttt = 350 - margintt.top - margintt.bottom;
 	
 	var svg = d3.select("#viz")
                 .append("svg")
@@ -37,35 +37,79 @@
 	
 	var svgtooltipGorge = d3.select("body")
     .append("div")
-	//.text("a simple tooltip")
-    //.style("position", "absolute")
+    .style("position", "absolute")
     .style("z-index", "7")
     .style("visibility", "hidden")
-	.style("float", "left")
-    //.style("background", "white")
     .append("svg")
     .attr("width", widthtt + margintt.left + margintt.right)
     .attr("height", heighttt + margintt.top + margintt.bottom)
 	.attr("x", "0px")
+	.attr("y", "550px")
     .append("g")
     .attr("transform",
         "translate(" + margintt.left + "," + margintt.top + ")");	
 	
 	
+	var svgtooltipPowell = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "8")
+    .style("visibility", "hidden")
+    .append("svg")
+    .attr("width", widthtt + margintt.left + margintt.right)
+    .attr("height", heighttt + margintt.top + margintt.bottom)
+	.attr("x", "0px")
+	.attr("y", "550px")
+    .append("g")
+    .attr("transform",
+        "translate(" + margintt.left + "," + margintt.top + ")");	
+		
+		
+	var svgtooltipMead = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "9")
+    .style("visibility", "hidden")
+    .append("svg")
+    .attr("width", widthtt + margintt.left + margintt.right)
+    .attr("height", heighttt + margintt.top + margintt.bottom)
+	.attr("x", "0px")
+	.attr("y", "550px")
+    .append("g")
+    .attr("transform",
+        "translate(" + margintt.left + "," + margintt.top + ")");	
+		
+		
+	var svgtooltipMojave = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .append("svg")
+    .attr("width", widthtt + margintt.left + margintt.right)
+    .attr("height", heighttt + margintt.top + margintt.bottom)
+	.attr("x", "0px")
+	.attr("y", "550px")
+    .append("g")
+    .attr("transform",
+        "translate(" + margintt.left + "," + margintt.top + ")");	
 	
-	//var svgtooltipGorge = d3.select("body")
-    //.append("div")
-    //.style("position", "absolute")
-    //.style("z-index", "10")
-    //.style("visibility", "hidden")
-	//.style("background", "white")
-    //.text("a simple tooltip");
-	
-	
-	
-	
-	
-	var x,y;
+	var svgtooltipHavasau = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "11")
+    .style("visibility", "hidden")
+    .append("svg")
+    .attr("width", widthtt + margintt.left + margintt.right)
+    .attr("height", heighttt + margintt.top + margintt.bottom)
+	.attr("x", "0px")
+	.attr("y", "550px")
+    .append("g")
+    .attr("transform",
+        "translate(" + margintt.left + "," + margintt.top + ")");		
+
+
+	var x,y,x_t1,y_t1,x_t2,y_t2,x_t3,y_t3,x_t4,y_t4,x_t5,y_t5;
     
     async function init() {
 	
@@ -84,33 +128,81 @@
 	//console.log(data);
 
       // X axis
-      x = d3.scaleTime()
+      x_t1 = d3.scaleTime()
 	  .domain(d3.extent(data, function(d) { return d.date; }))
       .range([ 0, widthtt ]);
 	  
       svgtooltipGorge.append("g")
-	  .attr("id", "x_axis")
+	  .attr("id", "x_axis_gorge")
       .attr("transform", "translate(0," + heighttt + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x_t1));
 
       // Y axis
-      y = d3.scaleLinear()
+      y_t1 = d3.scaleLinear()
       .domain(d3.extent(data, function(d) { return d.value; }))
       .range([ heighttt, 0 ]);
 	  
       svgtooltipGorge.append("g")
-	  .attr("id", "y_axis")
-      .call(d3.axisLeft(y));
+	  .attr("id", "y_axis_gorge")
+      .call(d3.axisLeft(y_t1));
 
      // line
       svgtooltipGorge.append("path")
-	  .attr("id", "path")
+	  .attr("id", "path_gorge")
       .datum(data)
 	  .attr("stroke", "blue")
       .attr("fill", "none")
       .attr("d", d3.line()
-        .x(function(d) { return x(d.date) })
-        .y(function(d) { return y(d.value) }))
+        .x(function(d) { return x_t1(d.date) })
+        .y(function(d) { return y_t1(d.value) }))
+
+    }
+    )
+	
+	
+	
+	
+	//Read the Powell data
+    d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Powell_1963_2022.csv',
+
+
+    function(d){
+      return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.elevation_ft }
+    },
+
+
+    function(data) {
+		
+	//console.log(data);
+
+      // X axis
+      x_t2 = d3.scaleTime()
+	  .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, widthtt ]);
+	  
+      svgtooltipPowell.append("g")
+	  .attr("id", "x_axis_powell")
+      .attr("transform", "translate(0," + heighttt + ")")
+      .call(d3.axisBottom(x_t2));
+
+      // Y axis
+      y_t2 = d3.scaleLinear()
+      .domain(d3.extent(data, function(d) { return d.value; }))
+      .range([ heighttt, 0 ]);
+	  
+      svgtooltipPowell.append("g")
+	  .attr("id", "y_axis_powell")
+      .call(d3.axisLeft(y_t2));
+
+     // line
+      svgtooltipPowell.append("path")
+	  .attr("id", "path_powell")
+      .datum(data)
+	  .attr("stroke", "blue")
+      .attr("fill", "none")
+      .attr("d", d3.line()
+        .x(function(d) { return x_t2(d.date) })
+        .y(function(d) { return y_t2(d.value) }))
 
     }
     )
@@ -142,7 +234,7 @@
       .range([ 0, width ]);
 	  
       svg.append("g")
-	  .attr("id", "x_axis")
+	  .attr("id", "x_axis_mead")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
@@ -152,21 +244,158 @@
       .range([ height, 0 ]);
 	  
       svg.append("g")
-	  .attr("id", "y_axis")
+	  .attr("id", "y_axis_mead")
       .call(d3.axisLeft(y));
 
      // line
       svg.append("path")
-	  .attr("id", "path")
+	  .attr("id", "path_mead")
       .datum(data)
 	  .attr("stroke", "blue")
       .attr("fill", "none")
       .attr("d", d3.line()
         .x(function(d) { return x(d.date) })
         .y(function(d) { return y(d.value) }))
+		
+		
+	  // tool tip X axis
+      x_t3 = d3.scaleTime()
+	  .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, widthtt ]);
+	  
+      svgtooltipMead.append("g")
+	  .attr("id", "x_axis_mead_tt")
+      .attr("transform", "translate(0," + heighttt + ")")
+      .call(d3.axisBottom(x_t3));
+
+      // tool tip Y axis
+      y_t3 = d3.scaleLinear()
+      .domain(d3.extent(data, function(d) { return d.value; }))
+      .range([ heighttt, 0 ]);
+	  
+      svgtooltipMead.append("g")
+	  .attr("id", "y_axis_mead_tt")
+      .call(d3.axisLeft(y_t3));
+
+     // tool tip line
+      svgtooltipMead.append("path")
+	  .attr("id", "path_mead_tt")
+      .datum(data)
+	  .attr("stroke", "blue")
+      .attr("fill", "none")
+      .attr("d", d3.line()
+        .x(function(d) { return x_t3(d.date) })
+        .y(function(d) { return y_t3(d.value) }))
+	
 
     }
     )
+	
+	
+	
+	//Read the Mojave data
+    d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Mojave_Formatted.csv',
+
+
+    function(d){
+      return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.elevation_ft }
+    },
+
+
+    function(data) {
+		
+	//console.log(data);
+
+      // X axis
+      x_t4 = d3.scaleTime()
+	  .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, widthtt ]);
+	  
+      svgtooltipMojave.append("g")
+	  .attr("id", "x_axis_mojave")
+      .attr("transform", "translate(0," + heighttt + ")")
+      .call(d3.axisBottom(x_t4));
+
+      // Y axis
+      y_t4 = d3.scaleLinear()
+      .domain(d3.extent(data, function(d) { return d.value; }))
+      .range([ heighttt, 0 ]);
+	  
+      svgtooltipMojave.append("g")
+	  .attr("id", "y_axis_mojave")
+      .call(d3.axisLeft(y_t4));
+
+     // line
+      svgtooltipMojave.append("path")
+	  .attr("id", "path_mojave")
+      .datum(data)
+	  .attr("stroke", "blue")
+      .attr("fill", "none")
+      .attr("d", d3.line()
+        .x(function(d) { return x_t4(d.date) })
+        .y(function(d) { return y_t4(d.value) }))
+
+    }
+    )
+	
+	
+	
+	
+	
+	
+	//Read the Havasau data
+    d3.csv('https://fostmic.github.io/narrative_visualization/Lake_Havasau_Formatted.csv',
+
+
+    function(d){
+      return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.elevation_ft }
+    },
+
+
+    function(data) {
+		
+	//console.log(data);
+
+      // X axis
+      x_t5 = d3.scaleTime()
+	  .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, widthtt ]);
+	  
+      svgtooltipHavasau.append("g")
+	  .attr("id", "x_axis_havasau")
+      .attr("transform", "translate(0," + heighttt + ")")
+      .call(d3.axisBottom(x_t5));
+
+      // Y axis
+      y_t5 = d3.scaleLinear()
+      .domain(d3.extent(data, function(d) { return d.value; }))
+      .range([ heighttt, 0 ]);
+	  
+      svgtooltipHavasau.append("g")
+	  .attr("id", "y_axis_havasau")
+      .call(d3.axisLeft(y));
+
+     // line
+      svgtooltipHavasau.append("path")
+	  .attr("id", "path_havasau")
+      .datum(data)
+	  .attr("stroke", "blue")
+      .attr("fill", "none")
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) }))
+		
+	
+    document.getElementById("forward").disabled = false;
+	document.getElementById("forward").innerHTML = "Forward";
+    }
+    )
+	
+	
+	
+
+	
+	
     }
 	  
 	  
@@ -179,11 +408,11 @@
 	       .domain([new Date(1935,1,15), new Date(1937,5,31)])
            .range([ 0, width ]);
 	  
-		   svg.select("#x_axis")
+		   svg.select("#x_axis_mead")
 		   .transition().duration(1500)
            .call(d3.axisBottom(x));
 		   
-		   svg.select("#path")
+		   svg.select("#path_mead")
 		   .transition().duration(1500)
 		   .attr("d", d3.line()
            .x(function(d) { return x(d.date) })
@@ -199,11 +428,11 @@
 	       .domain([new Date(1935,1,15), new Date(1998,11,15)])
            .range([ 0, width ]);
 	  
-		   svg.select("#x_axis")
+		   svg.select("#x_axis_mead")
 		   .transition().duration(1500)
            .call(d3.axisBottom(x));
 		   
-		   svg.select("#path")
+		   svg.select("#path_mead")
 		   .transition().duration(1500)
 		   .attr("d", d3.line()
            .x(function(d) { return x(d.date) })
@@ -214,7 +443,7 @@
 		case 2:
 		  document.getElementById("forward").disabled = false;
 		  
-		      if (svg.select("#x_axis").size() == 0) {
+		      if (svg.select("#x_axis_mead").size() == 0) {
 		        document.getElementById("header").innerHTML = "<b>Lake Mead Water Elevation(feet)</b>";
 		        svg.selectAll('*').remove();
 		        svg.append("g")
@@ -239,7 +468,7 @@
                    .range([ 0, width ]);
 	               
                    svg.append("g")
-	               .attr("id", "x_axis")
+	               .attr("id", "x_axis_mead")
                    .attr("transform", "translate(0," + height + ")")
                    .call(d3.axisBottom(x));
 	             
@@ -249,12 +478,12 @@
                    .range([ height, 0 ]);
 	               
                    svg.append("g")
-	               .attr("id", "y_axis")
+	               .attr("id", "y_axis_mead")
                    .call(d3.axisLeft(y));
 	             
                   // line
                    svg.append("path")
-	               .attr("id", "path")
+	               .attr("id", "path_mead")
                    .datum(data)
 	               .attr("stroke", "blue")
                    .attr("fill", "none")
@@ -271,11 +500,11 @@
 	              .domain([new Date(1935,1,15), new Date(2022,8,1)])
                   .range([ 0, width ]);
 		          
-		          svg.select("#x_axis")
+		          svg.select("#x_axis_mead")
 		          .transition().duration(1500)
                   .call(d3.axisBottom(x));
 		          
-		          svg.select("#path")
+		          svg.select("#path_mead")
 		          .transition().duration(1500)
 		          .attr("d", d3.line()
                   .x(function(d) { return x(d.date) })
@@ -296,7 +525,7 @@
           const radius = 20;
           
           
-          // Define the arrowhead marker variables
+          // arrowhead vars
           const markerBoxWidth = 20;
           const markerBoxHeight = 20;
           const refX = markerBoxWidth / 2;
@@ -318,7 +547,7 @@
 
 
           
-          // Add the arrowhead marker definition to the svg element
+          // arrowhead
           svg
             .append('defs')
             .append('marker')
@@ -335,12 +564,12 @@
 			
 	       svg
 			.append('text')
-			.attr('x', 30)
+			.attr('x', 25)
 			.attr('y', 200)
 			.text('MouseOver the Circles to Show a Graph of Historical Water Elevation Below')
 			.style("font-size", "12px");
           
-          // Add the first circle
+          // circle1
           svg
             .append('circle')
             .attr('cx', circleX)
@@ -348,7 +577,6 @@
             .attr('r', radius)
             .style('fill', 'lightblue')
 			.on("mouseover", function(){return svgtooltipGorge.style("visibility", "visible");})
-            //.on("mousemove", function(){return svgtooltipGorge.style("top", (event.pageY-10)+"px").style("left",+"0px");})
             .on("mouseout", function(){return svgtooltipGorge.style("visibility", "hidden");});
 
 	      svg
@@ -359,7 +587,7 @@
 			.style("font-size", "10px");
 			
           
-          // Add the line with arrowhead at the end
+          // line + arrowhead
           svg
             .append('path')
             .attr('d', d3.line()([lineStart, lineEnd]))
@@ -367,13 +595,15 @@
             .attr('marker-end', 'url(#arrow)')
             .attr('fill', 'none');
           
-          // Add the second circle
+          // circle2
           svg
             .append('circle')
             .attr('cx', lineEnd[0] + markerWidth + radius)
             .attr('cy', circleY)
             .attr('r', radius)
-            .style('fill', 'lightblue');
+            .style('fill', 'lightblue')
+			.on("mouseover", function(){return svgtooltipPowell.style("visibility", "visible");})
+            .on("mouseout", function(){return svgtooltipPowell.style("visibility", "hidden");});
 	      svg
 			.append('text')
 			.attr('x', lineEnd[0] + markerWidth + radius - 25)
@@ -382,7 +612,7 @@
 			.style("font-size", "10px");
 			
 			
-		  // Add the line with arrowhead at the end
+		  // line2
           svg
             .append('path')
             .attr('d', d3.line()([lineStart2, lineEnd2]))
@@ -390,13 +620,15 @@
             .attr('marker-end', 'url(#arrow)')
             .attr('fill', 'none');
           
-          // Add the third circle
+          // circle3
           svg
             .append('circle')
             .attr('cx', lineEnd2[0] + markerWidth + radius)
             .attr('cy', circleY)
             .attr('r', radius)
-            .style('fill', 'lightblue');
+            .style('fill', 'lightblue')
+			.on("mouseover", function(){return svgtooltipMead.style("visibility", "visible");})
+            .on("mouseout", function(){return svgtooltipMead.style("visibility", "hidden");});
 	      svg
 			.append('text')
 			.attr('x', lineEnd2[0] + markerWidth + radius - 25)
@@ -405,7 +637,7 @@
 			.style("font-size", "10px");
 			
           	  
-          // Add the line with arrowhead at the end
+          // line3
           svg
             .append('path')
             .attr('d', d3.line()([lineStart3, lineEnd3]))
@@ -413,13 +645,15 @@
             .attr('marker-end', 'url(#arrow)')
             .attr('fill', 'none');
           
-          // Add the fourth circle
+          // circle4
           svg
             .append('circle')
             .attr('cx', lineEnd3[0] + markerWidth + radius)
             .attr('cy', circleY)
             .attr('r', radius)
-            .style('fill', 'lightblue');
+            .style('fill', 'lightblue')
+			.on("mouseover", function(){return svgtooltipMojave.style("visibility", "visible");})
+            .on("mouseout", function(){return svgtooltipMojave.style("visibility", "hidden");});
 	      svg
 			.append('text')
 			.attr('x', lineEnd3[0] + markerWidth + radius - 26)
@@ -427,7 +661,7 @@
 			.text('Lake Mojave')
 			.style("font-size", "10px");			
 		  
-		 // Add the line with arrowhead at the end
+		  // line4
           svg
             .append('path')
             .attr('d', d3.line()([lineStart4, lineEnd4]))
@@ -435,13 +669,15 @@
             .attr('marker-end', 'url(#arrow)')
             .attr('fill', 'none');
           
-          // Add the fifth circle
+          // circle5
           svg
             .append('circle')
             .attr('cx', lineEnd4[0] + markerWidth + radius)
             .attr('cy', circleY)
             .attr('r', radius)
-            .style('fill', 'lightblue');
+            .style('fill', 'lightblue')
+			.on("mouseover", function(){return svgtooltipHavasau.style("visibility", "visible");})
+            .on("mouseout", function(){return svgtooltipHavasau.style("visibility", "hidden");});
 	      svg
 			.append('text')
 			.attr('x', lineEnd4[0] + markerWidth + radius - 30)
