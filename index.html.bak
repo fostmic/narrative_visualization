@@ -44,7 +44,7 @@
     .attr("width", widthtt + margintt.left + margintt.right)
     .attr("height", heighttt + margintt.top + margintt.bottom)
 	.attr("x", "0px")
-	.attr("y", "550px")
+	.attr("y", "700px")
     .append("g")
     .attr("transform",
         "translate(" + margintt.left + "," + margintt.top + ")");	
@@ -59,7 +59,7 @@
     .attr("width", widthtt + margintt.left + margintt.right)
     .attr("height", heighttt + margintt.top + margintt.bottom)
 	.attr("x", "0px")
-	.attr("y", "550px")
+	.attr("y", "700px")
     .append("g")
     .attr("transform",
         "translate(" + margintt.left + "," + margintt.top + ")");	
@@ -74,7 +74,7 @@
     .attr("width", widthtt + margintt.left + margintt.right)
     .attr("height", heighttt + margintt.top + margintt.bottom)
 	.attr("x", "0px")
-	.attr("y", "550px")
+	.attr("y", "700px")
     .append("g")
     .attr("transform",
         "translate(" + margintt.left + "," + margintt.top + ")");	
@@ -89,7 +89,7 @@
     .attr("width", widthtt + margintt.left + margintt.right)
     .attr("height", heighttt + margintt.top + margintt.bottom)
 	.attr("x", "0px")
-	.attr("y", "550px")
+	.attr("y", "700px")
     .append("g")
     .attr("transform",
         "translate(" + margintt.left + "," + margintt.top + ")");	
@@ -103,7 +103,7 @@
     .attr("width", widthtt + margintt.left + margintt.right)
     .attr("height", heighttt + margintt.top + margintt.bottom)
 	.attr("x", "0px")
-	.attr("y", "550px")
+	.attr("y", "700px")
     .append("g")
     .attr("transform",
         "translate(" + margintt.left + "," + margintt.top + ")");		
@@ -292,7 +292,7 @@
 
       // tool tip Y axis
       y_t3 = d3.scaleLinear()
-      .domain(d3.extent(data, function(d) { return d.value; }))
+      .domain([ 700, 1250 ])
       .range([ heighttt, 0 ]);
 	  
       svgtooltipMead.append("g")
@@ -431,11 +431,11 @@
            .range([ 0, width ]);
 	  
 		   svg.select("#x_axis_mead")
-		   .transition().duration(1500)
+		   .transition().duration(1000)
            .call(d3.axisBottom(x));
 		   
 		   svg.select("#path_mead")
-		   .transition().duration(1500)
+		   .transition().duration(1000)
 		   .attr("d", d3.line()
            .x(function(d) { return x(d.date) })
            .y(function(d) { return y(d.value) }));
@@ -457,7 +457,7 @@
 	       
            // Add annotation to the chart
            const makeAnnotations = d3.annotation()
-             .annotations(annotations)
+             .annotations(annotations);
              svg
              .append("g")
 	         .attr("id", "annotation")
@@ -474,11 +474,11 @@
            .range([ 0, width ]);
 	  
 		   svg.select("#x_axis_mead")
-		   .transition().duration(1500)
+		   .transition().duration(1000)
            .call(d3.axisBottom(x));
 		   
 		   svg.select("#path_mead")
-		   .transition().duration(1500)
+		   .transition().duration(1000)
 		   .attr("d", d3.line()
            .x(function(d) { return x(d.date) })
            .y(function(d) { return y(d.value) }));
@@ -500,7 +500,7 @@
 	       
            // Add annotation to the chart
            const makeAnnotations2 = d3.annotation()
-             .annotations(annotations2)
+             .annotations(annotations2);
              svg
              .append("g")
 	         .attr("id", "annotation")
@@ -569,11 +569,11 @@
                   .range([ 0, width ]);
 		          
 		          svg.select("#x_axis_mead")
-		          .transition().duration(1500)
+		          .transition().duration(1000)
                   .call(d3.axisBottom(x));
 		          
 		          svg.select("#path_mead")
-		          .transition().duration(1500)
+		          .transition().duration(1000)
 		          .attr("d", d3.line()
                   .x(function(d) { return x(d.date) })
                   .y(function(d) { return y(d.value) }));			     
@@ -588,7 +588,7 @@
 	           
                     },
                     x: 420,
-                    y: 180,
+                    y: 175,
                     dy: 75,
                     dx: -75
                   }
@@ -596,7 +596,7 @@
 	           
                // Add annotation to the chart
                const makeAnnotations3 = d3.annotation()
-                 .annotations(annotations3)
+                 .annotations(annotations3);
                  svg
                  .append("g")
 	             .attr("id", "annotation")
